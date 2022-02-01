@@ -1,9 +1,9 @@
 package player
 
 import (
+	"github.com/BeauRussell/fighting-game/engine/physics"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
-	"gitlab.com/yourknightmares/fighting-game/engine/physics"
 )
 
 type Player struct {

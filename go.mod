@@ -1,4 +1,4 @@
-module gitlab.com/yourknightmares/fighting-game
+module github.com/BeauRussell/fighting-game
 
 go 1.17
 

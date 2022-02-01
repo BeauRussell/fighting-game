@@ -6,9 +6,9 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 
-	"gitlab.com/yourknightmares/fighting-game/engine/asset"
-	"gitlab.com/yourknightmares/fighting-game/engine/player"
-	"gitlab.com/yourknightmares/fighting-game/engine/scenery"
+	"github.com/BeauRussell/fighting-game/engine/asset"
+	"github.com/BeauRussell/fighting-game/engine/player"
+	"github.com/BeauRussell/fighting-game/engine/scenery"
 )
 
 func main() {
