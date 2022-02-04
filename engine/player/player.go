@@ -51,5 +51,6 @@ func (p *Player) HandleMovement(win *pixelgl.Window, ground float64) {
 		p.Position.Y += float64(p.MovementRules.Gravity.CalculateVelocity())
 	} else {
 		p.MovementRules.Gravity.ResetVelocity()
+		p.Position.Y = ground
 	}
 }

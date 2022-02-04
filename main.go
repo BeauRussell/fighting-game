@@ -9,6 +9,7 @@ import (
 	"github.com/BeauRussell/fighting-game/engine/asset"
 	"github.com/BeauRussell/fighting-game/engine/player"
 	"github.com/BeauRussell/fighting-game/engine/scenery"
+	"github.com/BeauRussell/fighting-game/game/settings"
 )
 
 func main() {
@@ -22,6 +23,9 @@ func runGame() {
 		VSync:     true,
 		Resizable: true,
 	}
+
+	gameSettings := settings.RetrieveSettings()
+	moveSettings := gameSettings.Movement
 
 	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
@@ -37,26 +41,35 @@ func runGame() {
 		panic(err)
 	}
 
-	gravityConst := float64(-0.5)
-
 	players := make([]player.Player, 0)
 	player1Position := win.Bounds().Center()
+	player2Position := pixel.Vec{X: 1000, Y: 800}
 	players = append(players, player.NewPlayer(p1Sprite, player1Position, player.Keybinds{
 		Up:    pixelgl.KeyUp,
 		Left:  pixelgl.KeyLeft,
 		Right: pixelgl.KeyRight,
 	}, player.MovementRules{
-		Left:  -2.0,
-		Right: +2.0,
-		Up:    +10.0,
-	}, gravityConst))
+		Left:  moveSettings.Left,
+		Right: moveSettings.Right,
+		Up:    moveSettings.Up,
+	}, moveSettings.Gravity))
+
+	players = append(players, player.NewPlayer(p1Sprite, player2Position, player.Keybinds{
+		Up:    pixelgl.KeyW,
+		Left:  pixelgl.KeyA,
+		Right: pixelgl.KeyD,
+	}, player.MovementRules{
+		Left:  moveSettings.Left,
+		Right: moveSettings.Right,
+		Up:    moveSettings.Up,
+	}, moveSettings.Gravity))
 
 	bgImage, err := loadAssets.Sprite("test-stage.png")
 	if err != nil {
 		panic(err)
 	}
 
-	background := scenery.NewBackground(bgImage, win.Bounds().Center(), 180)
+	background := scenery.NewBackground(bgImage, win.Bounds().Center(), gameSettings.Stage.Ground)
 
 	win.Clear(pixel.RGB(0, 0, 0))
 

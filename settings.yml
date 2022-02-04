@@ -1,0 +1,8 @@
+movement:
+  right: 2.0
+  left:  -2.0
+  up: 10.0
+  gravity: -0.5
+
+stage:
+  ground: 180
