@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	"embed"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -12,12 +12,16 @@ import (
 	"github.com/BeauRussell/fighting-game/game/settings"
 )
 
+//go:embed images/*
+//go:embed settings.yml
+var content embed.FS
+
 func main() {
 	pixelgl.Run(runGame)
 }
 
 func runGame() {
-	gameSettings := settings.RetrieveSettings()
+	gameSettings := settings.RetrieveSettings(content)
 	moveSettings := gameSettings.Movement
 	windowWidth := gameSettings.Window.Width
 	widowHeight := gameSettings.Window.Height
@@ -36,16 +40,16 @@ func runGame() {
 
 	win.SetSmooth(false)
 
-	loadAssets := asset.NewLoad(os.DirFS("./images"))
+	loadAssets := asset.NewLoad(content)
 
-	bgImage, err := loadAssets.Sprite("test-stage.png")
+	bgImage, err := loadAssets.Sprite("images/test-stage.png")
 	if err != nil {
 		panic(err)
 	}
 
 	background := scenery.NewBackground(bgImage, win.Bounds().Center(), gameSettings.Stage.Ground, windowWidth)
 
-	p1Sprite, err := loadAssets.Sprite("pengu.png")
+	p1Sprite, err := loadAssets.Sprite("images/pengu.png")
 	if err != nil {
 		panic(err)
 	}

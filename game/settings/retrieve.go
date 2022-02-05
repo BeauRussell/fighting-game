@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"io/ioutil"
+	"embed"
 	"log"
 
 	"gopkg.in/yaml.v2"
@@ -37,8 +37,8 @@ type Data struct {
 	}
 }
 
-func RetrieveSettings() Data {
-	d, err := ioutil.ReadFile("settings.yml")
+func RetrieveSettings(content embed.FS) Data {
+	d, err := content.ReadFile("settings.yml")
 
 	if err != nil {
 		log.Fatalf("error: %v", err)
