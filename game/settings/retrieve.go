@@ -10,6 +10,10 @@ import (
 // Note: struct fields must be public in order for unmarshal to
 // correctly populate the data.
 type Data struct {
+	Window struct {
+		Height float64 `yaml:"height"`
+		Width  float64 `yaml:"width"`
+	}
 	Movement struct {
 		Right   float64 `yaml:"right"`
 		Left    float64 `yaml:"left"`
@@ -18,6 +22,10 @@ type Data struct {
 	}
 	Stage struct {
 		Ground float64 `yaml:"ground"`
+	}
+	Player struct {
+		Player1 struct {
+		}
 	}
 }
 

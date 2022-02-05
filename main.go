@@ -17,15 +17,17 @@ func main() {
 }
 
 func runGame() {
+	gameSettings := settings.RetrieveSettings()
+	moveSettings := gameSettings.Movement
+	windowWidth := gameSettings.Window.Width
+	widowHeight := gameSettings.Window.Height
+
 	cfg := pixelgl.WindowConfig{
 		Title:     "Fighting Game",
-		Bounds:    pixel.R(0, 0, 1280, 720),
+		Bounds:    pixel.R(0, 0, windowWidth, widowHeight),
 		VSync:     true,
 		Resizable: true,
 	}
-
-	gameSettings := settings.RetrieveSettings()
-	moveSettings := gameSettings.Movement
 
 	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
@@ -69,14 +71,14 @@ func runGame() {
 		panic(err)
 	}
 
-	background := scenery.NewBackground(bgImage, win.Bounds().Center(), gameSettings.Stage.Ground)
+	background := scenery.NewBackground(bgImage, win.Bounds().Center(), gameSettings.Stage.Ground, windowWidth)
 
 	win.Clear(pixel.RGB(0, 0, 0))
 
 	for !win.JustPressed(pixelgl.KeyEscape) {
 		background.Draw(win)
 		for i := range players {
-			players[i].HandleMovement(win, background.Ground)
+			players[i].HandleMovement(win, background.Bounds)
 		}
 
 		for i := range players {

@@ -8,18 +8,26 @@ import (
 type Background struct {
 	Sprite   *pixel.Sprite
 	Position pixel.Vec
-	Ground   float64
+	Bounds   Bounds
 }
 
 type Keybinds struct {
 	Up, Down, Left, Right pixelgl.Button
 }
 
-func NewBackground(sprite *pixel.Sprite, position pixel.Vec, ground float64) Background {
+type Bounds struct {
+	Bottom, Left, Right float64
+}
+
+func NewBackground(sprite *pixel.Sprite, position pixel.Vec, ground float64, width float64) Background {
 	return Background{
 		Sprite:   sprite,
 		Position: position,
-		Ground:   ground,
+		Bounds: Bounds{
+			Bottom: ground,
+			Left:   100,
+			Right:  width - 100,
+		},
 	}
 }
 
