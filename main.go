@@ -38,40 +38,48 @@ func runGame() {
 
 	loadAssets := asset.NewLoad(os.DirFS("./images"))
 
-	p1Sprite, err := loadAssets.Sprite("pengu.png")
-	if err != nil {
-		panic(err)
-	}
-
-	players := make([]player.Player, 0)
-	player1Position := win.Bounds().Center()
-	player2Position := pixel.Vec{X: 1000, Y: 800}
-	players = append(players, player.NewPlayer(p1Sprite, player1Position, player.Keybinds{
-		Up:    pixelgl.KeyUp,
-		Left:  pixelgl.KeyLeft,
-		Right: pixelgl.KeyRight,
-	}, player.MovementRules{
-		Left:  moveSettings.Left,
-		Right: moveSettings.Right,
-		Up:    moveSettings.Up,
-	}, moveSettings.Gravity))
-
-	players = append(players, player.NewPlayer(p1Sprite, player2Position, player.Keybinds{
-		Up:    pixelgl.KeyW,
-		Left:  pixelgl.KeyA,
-		Right: pixelgl.KeyD,
-	}, player.MovementRules{
-		Left:  moveSettings.Left,
-		Right: moveSettings.Right,
-		Up:    moveSettings.Up,
-	}, moveSettings.Gravity))
-
 	bgImage, err := loadAssets.Sprite("test-stage.png")
 	if err != nil {
 		panic(err)
 	}
 
 	background := scenery.NewBackground(bgImage, win.Bounds().Center(), gameSettings.Stage.Ground, windowWidth)
+
+	p1Sprite, err := loadAssets.Sprite("pengu.png")
+	if err != nil {
+		panic(err)
+	}
+
+	players := make([]player.Player, 0)
+	player1Position := pixel.Vec{X: background.Bounds.Left + 100, Y: background.Bounds.Bottom}
+	player2Position := pixel.Vec{X: background.Bounds.Right - 100, Y: background.Bounds.Bottom}
+	player1Keybinds := player.Keybinds{
+		Up:    pixelgl.KeyUp,
+		Left:  pixelgl.KeyLeft,
+		Right: pixelgl.KeyRight,
+	}
+	player2Keybinds := player.Keybinds{
+		Up:    pixelgl.KeyW,
+		Left:  pixelgl.KeyA,
+		Right: pixelgl.KeyD,
+	}
+
+	p1Settings := gameSettings.Player.Player1
+	p2Settings := gameSettings.Player.Player2
+
+	players = append(players, player.NewPlayer(p1Sprite, player1Position, player1Keybinds, player.Stats{
+		Health: p1Settings.Health,
+		Damage: p1Settings.Damage,
+		Speed:  p1Settings.Speed,
+		Jump:   10,
+	}, moveSettings.Gravity))
+
+	players = append(players, player.NewPlayer(p1Sprite, player2Position, player2Keybinds, player.Stats{
+		Health: p2Settings.Health,
+		Damage: p2Settings.Damage,
+		Speed:  p2Settings.Speed,
+		Jump:   10,
+	}, moveSettings.Gravity))
 
 	win.Clear(pixel.RGB(0, 0, 0))
 

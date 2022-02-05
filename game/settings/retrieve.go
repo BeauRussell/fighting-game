@@ -25,6 +25,14 @@ type Data struct {
 	}
 	Player struct {
 		Player1 struct {
+			Health float64 `yaml:"health"`
+			Speed  float64 `yaml:"speed"`
+			Damage float64 `yaml:"damage"`
+		}
+		Player2 struct {
+			Health float64 `yaml:"health"`
+			Speed  float64 `yaml:"speed"`
+			Damage float64 `yaml:"damage"`
 		}
 	}
 }
