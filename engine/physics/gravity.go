@@ -16,6 +16,6 @@ func (g *Gravity) CalculateVelocity() float64 {
 	return g.Velocity
 }
 
-func (g *Gravity) ResetVelocity() {
-	g.Velocity = 0
+func (g *Gravity) SetVelocity(v float64) {
+	g.Velocity = v
 }

@@ -74,22 +74,24 @@ func runGame() {
 		Health: p1Settings.Health,
 		Damage: p1Settings.Damage,
 		Speed:  p1Settings.Speed,
-		Jump:   10,
 	}, moveSettings.Gravity)
 
 	var player2 player.Player = player.NewPlayer(p1Sprite, player2Position, player2Keybinds, player.Stats{
 		Health: p2Settings.Health,
 		Damage: p2Settings.Damage,
 		Speed:  p2Settings.Speed,
-		Jump:   10,
 	}, moveSettings.Gravity)
 
 	win.Clear(pixel.RGB(0, 0, 0))
 
 	for !win.Closed() {
 		background.Draw(win)
-		player1.HandleMovement(win, background.Bounds, player2)
-		player2.HandleMovement(win, background.Bounds, player1)
+		player1.HandleMovement(win, background.Bounds, &player2)
+		player2.HandleMovement(win, background.Bounds, &player1)
+
+		if win.JustPressed(pixelgl.KeyX) {
+			player1.Attack(&player2)
+		}
 
 		player1.Draw(win)
 		player2.Draw(win)

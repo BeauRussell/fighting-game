@@ -27,7 +27,6 @@ type Stats struct {
 	Health  float64
 	Damage  float64
 	Speed   float64
-	Jump    float64
 	Gravity physics.Gravity
 }
 
@@ -51,34 +50,35 @@ func (p *Player) Draw(win *pixelgl.Window) {
 	statsBox.Draw(win, pixel.IM)
 }
 
-func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds, opposingPlayer Player) {
+func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds, opposingPlayer *Player) {
 
 	if win.Pressed(p.Keybinds.Left) && p.Position.X > bounds.Left {
 		p.Position.X -= p.Stats.Speed
 		if p.CheckCollision(opposingPlayer) {
-			p.Position.X += p.Stats.Speed
+			p.Position.X += p.Stats.Speed - 1
 		}
 	}
 	if win.Pressed(p.Keybinds.Right) && p.Position.X < bounds.Right {
 		p.Position.X += p.Stats.Speed
 		if p.CheckCollision(opposingPlayer) {
-			p.Position.X -= p.Stats.Speed
+			p.Position.X -= p.Stats.Speed + 1
 		}
 	}
-	if win.Pressed(p.Keybinds.Up) {
-		p.Position.Y += p.Stats.Jump
+	if win.JustPressed(p.Keybinds.Up) && p.Position.Y == bounds.Bottom {
+		p.Position.Y += 10
+		p.Stats.Gravity.SetVelocity(15)
 	}
 	if p.Position.Y > bounds.Bottom {
 		p.Position.Y += float64(p.Stats.Gravity.CalculateVelocity())
 	} else {
-		p.Stats.Gravity.ResetVelocity()
+		p.Stats.Gravity.SetVelocity(0)
 		p.Position.Y = bounds.Bottom
 	}
 
 	p.Hitbox = CalculateHitbox(p.Sprite, p.Position)
 }
 
-func (player *Player) CheckCollision(opposingPlayer Player) bool {
+func (player *Player) CheckCollision(opposingPlayer *Player) bool {
 	if player.Position.X > opposingPlayer.Hitbox.Max.X || player.Hitbox.Max.X < opposingPlayer.Position.X {
 		return false
 	} else {
@@ -89,4 +89,10 @@ func (player *Player) CheckCollision(opposingPlayer Player) bool {
 func CalculateHitbox(sprite *pixel.Sprite, position pixel.Vec) pixel.Rect {
 	var dimensions pixel.Vec = sprite.Frame().Size()
 	return pixel.R(position.X, position.Y, position.X+dimensions.X, position.Y+dimensions.Y)
+}
+
+func (player *Player) Attack(opposingPlayer *Player) {
+	if player.CheckCollision(opposingPlayer) {
+		opposingPlayer.Stats.Health -= player.Stats.Damage
+	}
 }
