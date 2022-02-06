@@ -86,7 +86,7 @@ func runGame() {
 
 	win.Clear(pixel.RGB(0, 0, 0))
 
-	for !win.JustPressed(pixelgl.KeyEscape) {
+	for !win.Closed() {
 		background.Draw(win)
 		player1.HandleMovement(win, background.Bounds, player2)
 		player2.HandleMovement(win, background.Bounds, player1)
