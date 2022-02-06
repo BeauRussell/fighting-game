@@ -54,7 +54,6 @@ func runGame() {
 		panic(err)
 	}
 
-	players := make([]player.Player, 0)
 	player1Position := pixel.Vec{X: background.Bounds.Left + 100, Y: background.Bounds.Bottom}
 	player2Position := pixel.Vec{X: background.Bounds.Right - 100, Y: background.Bounds.Bottom}
 	player1Keybinds := player.Keybinds{
@@ -71,32 +70,29 @@ func runGame() {
 	p1Settings := gameSettings.Player.Player1
 	p2Settings := gameSettings.Player.Player2
 
-	players = append(players, player.NewPlayer(p1Sprite, player1Position, player1Keybinds, player.Stats{
+	var player1 player.Player = player.NewPlayer(p1Sprite, player1Position, player1Keybinds, player.Stats{
 		Health: p1Settings.Health,
 		Damage: p1Settings.Damage,
 		Speed:  p1Settings.Speed,
 		Jump:   10,
-	}, moveSettings.Gravity))
+	}, moveSettings.Gravity)
 
-	players = append(players, player.NewPlayer(p1Sprite, player2Position, player2Keybinds, player.Stats{
+	var player2 player.Player = player.NewPlayer(p1Sprite, player2Position, player2Keybinds, player.Stats{
 		Health: p2Settings.Health,
 		Damage: p2Settings.Damage,
 		Speed:  p2Settings.Speed,
 		Jump:   10,
-	}, moveSettings.Gravity))
+	}, moveSettings.Gravity)
 
 	win.Clear(pixel.RGB(0, 0, 0))
 
 	for !win.JustPressed(pixelgl.KeyEscape) {
 		background.Draw(win)
-		for i := range players {
-			players[i].HandleMovement(win, background.Bounds)
-		}
+		player1.HandleMovement(win, background.Bounds, player2)
+		player2.HandleMovement(win, background.Bounds, player1)
 
-		for i := range players {
-			// Collision Detection Here
-			players[i].Draw(win)
-		}
+		player1.Draw(win)
+		player2.Draw(win)
 
 		win.Update()
 	}

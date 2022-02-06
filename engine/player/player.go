@@ -49,12 +49,19 @@ func (p *Player) Draw(win *pixelgl.Window) {
 	statsBox.Draw(win, pixel.IM)
 }
 
-func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds) {
+func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds, opposingPlayer Player) {
+
 	if win.Pressed(p.Keybinds.Left) && p.Position.X > bounds.Left {
 		p.Position.X -= p.Stats.Speed
+		if p.CheckCollision(opposingPlayer) {
+			p.Position.X += p.Stats.Speed
+		}
 	}
 	if win.Pressed(p.Keybinds.Right) && p.Position.X < bounds.Right {
 		p.Position.X += p.Stats.Speed
+		if p.CheckCollision(opposingPlayer) {
+			p.Position.X -= p.Stats.Speed
+		}
 	}
 	if win.Pressed(p.Keybinds.Up) {
 		p.Position.Y += p.Stats.Jump
@@ -64,5 +71,17 @@ func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds) {
 	} else {
 		p.Stats.Gravity.ResetVelocity()
 		p.Position.Y = bounds.Bottom
+	}
+}
+
+func (player *Player) CheckCollision(opposingPlayer Player) bool {
+	playerWidth := player.Sprite.Frame().W()
+	opposingWidth := opposingPlayer.Sprite.Frame().W()
+	playerX := [2]float64{player.Position.X, player.Position.X + playerWidth}
+	opposingPlayerX := [2]float64{opposingPlayer.Position.X, opposingPlayer.Position.X + opposingWidth}
+	if playerX[0] > opposingPlayerX[1] || playerX[1] < opposingPlayerX[0] {
+		return false
+	} else {
+		return true
 	}
 }
