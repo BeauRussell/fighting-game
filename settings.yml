@@ -14,9 +14,9 @@ stage:
 player:
   player1:
     health: 2000
-    speed: 2.0
+    speed: 3.0
     damage: 50
   player2:
     health: 2000
-    speed: 3.0
+    speed: 3.5
     damage: 100

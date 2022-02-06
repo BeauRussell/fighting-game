@@ -79,7 +79,7 @@ func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds, oppo
 }
 
 func (player *Player) CheckCollision(opposingPlayer *Player) bool {
-	if player.Position.X > opposingPlayer.Hitbox.Max.X || player.Hitbox.Max.X < opposingPlayer.Position.X {
+	if player.Position.X > opposingPlayer.Hitbox.Max.X || player.Hitbox.Max.X < opposingPlayer.Position.X || player.Position.Y > opposingPlayer.Hitbox.Max.Y {
 		return false
 	} else {
 		return true
