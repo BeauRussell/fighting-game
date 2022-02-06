@@ -16,6 +16,7 @@ type Player struct {
 	Position pixel.Vec
 	Keybinds Keybinds
 	Stats    Stats
+	Hitbox   pixel.Rect
 }
 
 type Keybinds struct {
@@ -38,6 +39,7 @@ func NewPlayer(sprite *pixel.Sprite, position pixel.Vec, keybinds Keybinds, stat
 		Position: position,
 		Keybinds: keybinds,
 		Stats:    stats,
+		Hitbox:   CalculateHitbox(sprite, position),
 	}
 }
 
@@ -72,16 +74,19 @@ func (p *Player) HandleMovement(win *pixelgl.Window, bounds scenery.Bounds, oppo
 		p.Stats.Gravity.ResetVelocity()
 		p.Position.Y = bounds.Bottom
 	}
+
+	p.Hitbox = CalculateHitbox(p.Sprite, p.Position)
 }
 
 func (player *Player) CheckCollision(opposingPlayer Player) bool {
-	playerWidth := player.Sprite.Frame().W()
-	opposingWidth := opposingPlayer.Sprite.Frame().W()
-	playerX := [2]float64{player.Position.X, player.Position.X + playerWidth}
-	opposingPlayerX := [2]float64{opposingPlayer.Position.X, opposingPlayer.Position.X + opposingWidth}
-	if playerX[0] > opposingPlayerX[1] || playerX[1] < opposingPlayerX[0] {
+	if player.Position.X > opposingPlayer.Hitbox.Max.X || player.Hitbox.Max.X < opposingPlayer.Position.X {
 		return false
 	} else {
 		return true
 	}
+}
+
+func CalculateHitbox(sprite *pixel.Sprite, position pixel.Vec) pixel.Rect {
+	var dimensions pixel.Vec = sprite.Frame().Size()
+	return pixel.R(position.X, position.Y, position.X+dimensions.X, position.Y+dimensions.Y)
 }
